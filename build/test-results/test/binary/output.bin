@@ -1,0 +1,14 @@
+ˆ2023-10-07 18:05:22.079 [Test worker @coroutine#1] TRACE i.ktor.client.plugins.HttpPlainText - Adding Accept-Charset=UTF-8 to http:///
+¥2023-10-07 18:05:22.221 [DefaultDispatcher-worker-1 @call-context#2] INFO  ktor.test - No ktor.deployment.watch patterns specified, automatic reload is not active.
+~2023-10-07 18:05:22.298 [DefaultDispatcher-worker-1 @call-context#2] INFO  ktor.test - Application started in 0.109 seconds.
+m2023-10-07 18:05:22.408 [DefaultDispatcher-worker-1 @request#2] TRACE io.ktor.routing.Routing - Trace for []
+/, segment:0 -> SUCCESS @ /
+  /, segment:0 -> SUCCESS @ /
+8    /(method:GET), segment:0 -> SUCCESS @ /(method:GET)
+Matched routes:
+$  "" -> "<slash>" -> "(method:GET)"
+Route resolve result:
+  SUCCESS @ /(method:GET)
+“2023-10-07 18:05:22.499 [Test worker @coroutine#1] TRACE i.k.client.plugins.HttpCallValidator - Validating response for request http://localhost/
+™2023-10-07 18:05:22.500 [Test worker @coroutine#1] TRACE i.k.c.p.DefaultResponseValidation - Skipping default response validation for http://localhost/
+Ö2023-10-07 18:05:23.444 [Test worker @coroutine#1] TRACE i.k.c.plugins.defaultTransformers - Transformed with default transformers response body for http://localhost/ to class io.ktor.utils.io.core.ByteReadPacket
