@@ -1,12 +1,15 @@
 package com.example.plugins
 
 import com.example.model.data.dataClasses.User
+import com.example.model.entities.UserEntity
 import com.example.model.network.ApiHeaders
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.ktorm.database.Database
+import org.ktorm.dsl.*
+import org.ktorm.dsl.like
 
 fun Application.configureRouting(database  : Database) {
 
@@ -24,15 +27,35 @@ fun Application.configureRouting(database  : Database) {
             var email = call.request.headers[ApiHeaders.email]
             var password = call.request.headers[ApiHeaders.password]
 
-            call.respond(
-                User(
-                    user_id = 0,
-                    first_name = "rayan",
-                    last_name = "aouf",
-                    phone_number = 0,
-                    password = "$password"
-                )
-            )
+
+            var users = database
+                .from(UserEntity)
+                .select()
+                .where {
+                    (UserEntity.user_email like "$email") and (UserEntity.user_password like "$password")
+                }
+
+
+
+            for (user in users ){
+                if (user.size() > 0){
+                    call.respond(
+                        User(
+                            user_id = user[UserEntity.user_id]!!,
+                            first_name = user[UserEntity.first_name]!!,
+                            last_name = user[UserEntity.last_name]!!,
+                            phone_number = user[UserEntity.phone_number]!!,
+                            password = user[UserEntity.user_password]!!
+                        )
+                    )
+                }
+                else{
+                    call.respond("ERROR")
+                }
+            }
+
+
+
         }
 
 
