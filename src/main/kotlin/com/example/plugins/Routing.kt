@@ -1,6 +1,7 @@
 package com.example.plugins
 
 import com.example.model.data.dataClasses.User
+import com.example.model.data.sealedClasses.ApiExceptions
 import com.example.model.entities.UserEntity
 import com.example.model.network.ApiHeaders
 import io.ktor.server.application.*
@@ -39,6 +40,9 @@ fun Application.configureRouting(database  : Database) {
 
             for (user in users ){
                 if (user.size() > 0){
+
+                    call.response.headers.append(ApiHeaders.exception , ApiExceptions.NoException().msg)
+
                     call.respond(
                         User(
                             user_id = user[UserEntity.user_id]!!,
@@ -50,7 +54,8 @@ fun Application.configureRouting(database  : Database) {
                     )
                 }
                 else{
-                    call.respond("ERROR")
+                    call.response.headers.append(ApiHeaders.exception , ApiExceptions.WrongEmailOrPasswordException().msg)
+                    call.respond("error")
                 }
             }
 
