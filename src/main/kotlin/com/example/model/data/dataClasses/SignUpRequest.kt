@@ -10,5 +10,5 @@ data class SignUpRequest(
     val email     : String,
     val wilaya    : String,
     val number    : String,
-    val password  : String
+    val password  : String,
 )

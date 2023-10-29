@@ -1,7 +1,7 @@
 package com.example.plugins
 
+import com.example.model.data.dataClasses.Alpha1User
 import com.example.model.data.dataClasses.SignUpRequest
-import com.example.model.data.dataClasses.User
 import com.example.model.data.sealedClasses.ApiExceptions
 import com.example.model.entities.UserEntity
 import com.example.model.network.ApiHeaders
@@ -17,12 +17,12 @@ fun Application.configureRouting(database  : Database) {
 
     routing {
 
-        var user : User? = null
+        var user : Alpha1User? = null
 
         //postgres://RAYANaouf:whqo65NdXMze@ep-red-cherry-13821704.us-west-2.aws.neon.tech/neondb
 
         get("/") {
-            call.respondText("hello BiggSam")
+            call.respondText("hello BiggSam v0.22")
         }
 
         get("/signIn"){
@@ -45,7 +45,7 @@ fun Application.configureRouting(database  : Database) {
                     call.response.headers.append(ApiHeaders.exception , ApiExceptions.NoException().msg)
 
                     call.respond(
-                        User(
+                        Alpha1User(
                             user_id = user[UserEntity.user_id]!!,
                             first_name = user[UserEntity.first_name]!!,
                             last_name = user[UserEntity.last_name]!!,
@@ -75,6 +75,8 @@ fun Application.configureRouting(database  : Database) {
                 set(it.phone_number  , signUpRequest.number.toIntOrNull()?: 0)
                 set(it.user_password , signUpRequest.password)
                 set(it.user_email    , signUpRequest.email)
+                set(it.img_uri       , null)
+                set(it.account_type  , null)
             }
 
             var users = database
@@ -90,13 +92,15 @@ fun Application.configureRouting(database  : Database) {
                     call.response.headers.append(ApiHeaders.exception , ApiExceptions.NoException().msg)
 
                     call.respond(
-                        User(
+                        Alpha1User(
                             user_id = user[UserEntity.user_id]!!,
                             first_name = user[UserEntity.first_name]!!,
                             last_name = user[UserEntity.last_name]!!,
                             phone_number = user[UserEntity.phone_number]!!,
                             password = user[UserEntity.user_password]!!,
-                            user_email = user[UserEntity.user_email]!!
+                            user_email = user[UserEntity.user_email]!!,
+                            img_uri = user[UserEntity.img_uri],
+                            account_type = user[UserEntity.account_type]
                         )
                     )
                 }
@@ -111,7 +115,7 @@ fun Application.configureRouting(database  : Database) {
 
 
         post("/getUsers"){
-            user = call.receive<User>()
+            user = call.receive<Alpha1User>()
 
             println(user)
 

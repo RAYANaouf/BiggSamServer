@@ -27,16 +27,15 @@ fun main() {
 
 fun Application.module() {
 
-    var databasse = Database.connect(
+    var database = Database.connect(
         url = "jdbc:postgresql://ep-red-cherry-13821704.us-west-2.aws.neon.tech/neondb",
         driver = "org.postgresql.Driver",
         user = "RAYANaouf",
         password = "whqo65NdXMze"
     )
 
-
-    configureSecurity()
-    configureRouting(databasse)
+//    configureSecurity()
+    configureRouting(database)
 }
 
 
