@@ -4,7 +4,7 @@ import org.ktorm.schema.Table
 import org.ktorm.schema.int
 import org.ktorm.schema.varchar
 
-object UserEntity : Table<Nothing>("Alpha1User"){
+object UserEntity : Table<Nothing>("alpha1user"){
     val user_id        = int("user_id").primaryKey()
     val first_name     = varchar("first_name")
     val last_name      = varchar("last_name")

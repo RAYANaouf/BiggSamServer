@@ -105,7 +105,7 @@ fun Application.configureRouting(database  : Database) {
                     )
                 }
                 else{
-//                    call.response.headers.append(ApiHeaders.exception , ApiExceptions.WrongEmailOrPasswordException().msg)
+                    call.response.headers.append(ApiHeaders.exception , ApiExceptions.WrongEmailOrPasswordException().msg)
                     call.respond("error")
                 }
             }
