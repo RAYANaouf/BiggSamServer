@@ -75,8 +75,8 @@ fun Application.configureRouting(database  : Database) {
                 set(it.phone_number  , signUpRequest.number.toIntOrNull()?: 0)
                 set(it.user_password , signUpRequest.password)
                 set(it.user_email    , signUpRequest.email)
-                set(it.img_uri       , null)
-                set(it.account_type  , null)
+                set(it.img_uri       , "")
+                set(it.account_type  , "")
             }
 
             var users = database
