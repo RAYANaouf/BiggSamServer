@@ -22,7 +22,7 @@ fun Application.configureRouting(database  : Database) {
         //postgres://RAYANaouf:whqo65NdXMze@ep-red-cherry-13821704.us-west-2.aws.neon.tech/neondb
 
         get("/") {
-            call.respondText("hello BiggSam v0.22")
+            call.respondText("hello BiggSam v0.25")
         }
 
         get("/signIn"){
