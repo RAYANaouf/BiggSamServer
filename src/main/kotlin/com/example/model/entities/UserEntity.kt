@@ -12,5 +12,5 @@ object UserEntity : Table<Nothing>("alpha1user"){
     val user_email     = varchar("user_email")
     val user_password  = varchar("user_password")
     val img_uri        = varchar("user_photo")
-    val account_type   = varchar("account_type")
+    val account_type   = varchar("accounttype")
 }
