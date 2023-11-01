@@ -1,6 +1,7 @@
 package com.example.plugins
 
 import com.example.model.data.dataClasses.Alpha1User
+import com.example.model.data.dataClasses.SetUpRequest
 import com.example.model.data.dataClasses.SignUpRequest
 import com.example.model.data.sealedClasses.ApiExceptions
 import com.example.model.entities.UserEntity
@@ -110,6 +111,19 @@ fun Application.configureRouting(database  : Database) {
                 }
             }
             
+
+        }
+
+        post("/setUpAccount") {
+
+            var setUpAccount = call.receive<SetUpRequest>()
+
+            database.update(UserEntity){
+                set(it.img_uri , setUpAccount.user_photo)
+                set(it.account_type , setUpAccount.accountType)
+
+                where { it.user_email like setUpAccount.user_email }
+            }
 
         }
 
