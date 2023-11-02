@@ -118,11 +118,20 @@ fun Application.configureRouting(database  : Database) {
 
             var setUpAccount = call.receive<SetUpRequest>()
 
-            database.update(UserEntity){
-                set(it.img_uri , setUpAccount.user_photo)
-                set(it.account_type , setUpAccount.accountType)
+//            database.update(UserEntity){
+//                set(it.img_uri , setUpAccount.user_photo)
+//                set(it.account_type , setUpAccount.accountType)
+//
+//                where { it.user_email like setUpAccount.user_email }
+//            }
 
-                where { it.user_email like setUpAccount.user_email }
+            val users = database
+                .from(UserEntity)
+                .select()
+                .where { UserEntity.user_email like setUpAccount.user_email }
+
+            for (user in users){
+                println("email : "+user[UserEntity.user_email])
             }
 
         }
