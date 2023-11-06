@@ -1,11 +1,13 @@
 package com.example.plugins
 
 import com.example.model.data.dataClasses.Alpha1User
+import com.example.model.data.dataClasses.AlphaStore
 import com.example.model.data.dataClasses.SetUpRequest
 import com.example.model.data.dataClasses.SignUpRequest
 import com.example.model.data.sealedClasses.ApiExceptions
 import com.example.model.entities.UserEntity
 import com.example.model.network.ApiHeaders
+import com.example.model.network.ApiRoutes
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -125,12 +127,6 @@ fun Application.configureRouting(database  : Database) {
                 where { it.user_email like setUpAccount.user_email }
             }
 
-//            val users = database
-//                .from(UserEntity)
-//                .select()
-//                .where { UserEntity.user_email like setUpAccount.user_email }
-
-
         }
 
 
@@ -145,6 +141,28 @@ fun Application.configureRouting(database  : Database) {
 
         get("/getUser"){
             call.respondText("hello  ${user?.first_name} ${user?.last_name}")
+        }
+
+        get("/${ApiRoutes.getStores}"){
+
+            val response = database
+                .from(UserEntity)
+                .select()
+
+            var stores  = ArrayList<AlphaStore>()
+
+            for(store in response ){
+                stores.add(
+                    AlphaStore(
+                        store_id = store[UserEntity.user_id]?.toLong() ?: 0 ,
+                        store_img = store[UserEntity.img_uri] ?: "" ,
+                        store_name = store[UserEntity.first_name] ?: ""
+                    )
+                )
+            }
+
+            call.respond(stores)
+            
         }
 
     }
