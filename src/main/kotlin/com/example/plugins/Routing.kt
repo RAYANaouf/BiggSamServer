@@ -5,6 +5,7 @@ import com.example.model.data.dataClasses.AlphaStore
 import com.example.model.data.dataClasses.SetUpRequest
 import com.example.model.data.dataClasses.SignUpRequest
 import com.example.model.data.sealedClasses.ApiExceptions
+import com.example.model.entities.AlphaStoreEntity
 import com.example.model.entities.UserEntity
 import com.example.model.network.ApiHeaders
 import com.example.model.network.ApiRoutes
@@ -146,7 +147,7 @@ fun Application.configureRouting(database  : Database) {
         get("/${ApiRoutes.getStores}"){
 
             val response = database
-                .from(UserEntity)
+                .from(AlphaStoreEntity)
                 .select()
 
             var stores  = ArrayList<AlphaStore>()
@@ -154,9 +155,9 @@ fun Application.configureRouting(database  : Database) {
             for(store in response ){
                 stores.add(
                     AlphaStore(
-                        store_id = store[UserEntity.user_id]?.toLong() ?: 0 ,
-                        store_img = store[UserEntity.img_uri] ?: "" ,
-                        store_name = store[UserEntity.first_name] ?: ""
+                        store_id = store[AlphaStoreEntity.store_id]?.toLong() ?: 0 ,
+                        store_name = store[AlphaStoreEntity.store_name] ?: "",
+                        store_img = store[AlphaStoreEntity.store_img] ?: ""
                     )
                 )
             }
