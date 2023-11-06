@@ -161,8 +161,10 @@ fun Application.configureRouting(database  : Database) {
                 )
             }
 
+            call.response.headers.append(ApiHeaders.exception , ApiExceptions.NoException().msg)
+
             call.respond(stores)
-            
+
         }
 
     }
