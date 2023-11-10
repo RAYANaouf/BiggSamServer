@@ -155,12 +155,17 @@ fun Application.configureRouting(database  : Database) {
             for(store in response ){
                 stores.add(
                     AlphaStore(
-                        store_id = store[AlphaStoreEntity.store_id]?.toLong() ?: 0 ,
-                        store_name = store[AlphaStoreEntity.store_name] ?: "",
-                        store_img = store[AlphaStoreEntity.store_img] ?: ""
+                        store_id       = store[AlphaStoreEntity.store_id]?.toLong() ?: 0 ,
+                        store_name     = store[AlphaStoreEntity.store_name] ?:  "",
+                        store_photo    = store[AlphaStoreEntity.store_photo] ?: "",
+                        store_email    = store[AlphaStoreEntity.store_email] ?: "",
+                        store_password = store[AlphaStoreEntity.store_password] ?: "",
+                        store_number   = store[AlphaStoreEntity.store_number] ?: 0 ,
+                        store_wilaya   = store[AlphaStoreEntity.store_wilaya] ?: ""
                     )
                 )
             }
+
 
             call.response.headers.append(ApiHeaders.exception , ApiExceptions.NoException().msg)
 
