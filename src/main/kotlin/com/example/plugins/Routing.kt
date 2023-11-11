@@ -70,49 +70,29 @@ fun Application.configureRouting(database  : Database) {
 
         }
 
-        post("/${ApiRoutes.signUp}"){
+        post(ApiRoutes.signUp){
 
-            val signUpRequest = call.receive<SignUpRequest>()
+            val store = call.receive<AlphaStore>()
 
-            database.insert(AlphaStoreEntity){
-                set(it.store_name     , signUpRequest.firstName)
-                set(it.store_number   , signUpRequest.number.toIntOrNull()?: 0)
-                set(it.store_password , signUpRequest.password)
-                set(it.store_email    , signUpRequest.email)
+            var result = database.insert(AlphaStoreEntity){
+                set(it.store_name     , store.store_name)
+                set(it.store_number   , store.store_number)
+                set(it.store_password , store.store_password)
+                set(it.store_email    , store.store_email)
+                set(it.store_wilaya   , store.store_wilaya)
                 set(it.store_photo    , "")
             }
 
-            var users = database
-                .from(UserEntity)
-                .select()
-                .where {
-                    UserEntity.user_email like "${signUpRequest.email}"
-                }
-
-            for (user in users){
-                if (user.size() > 0){
-
-                    call.response.headers.append(ApiHeaders.exception , ApiExceptions.NoException().msg)
-
-                    call.respond(
-                        Alpha1User(
-                            user_id = user[UserEntity.user_id]!!,
-                            first_name = user[UserEntity.first_name]!!,
-                            last_name = user[UserEntity.last_name]!!,
-                            phone_number = user[UserEntity.phone_number]!!,
-                            password = user[UserEntity.user_password]!!,
-                            user_email = user[UserEntity.user_email]!!,
-                            img_uri = user[UserEntity.img_uri],
-                            account_type = user[UserEntity.account_type]
-                        )
-                    )
-                }
-                else{
-                    call.response.headers.append(ApiHeaders.exception , ApiExceptions.WrongEmailOrPasswordException().msg)
-                    call.respond("error")
-                }
+            if (result > 0){
+                call.response.headers.append(ApiHeaders.exception , ApiExceptions.NoException().msg)
+                call.response.headers.append(ApiHeaders.createdId , result.toString())
             }
-            
+            else{
+                call.response.headers.append(ApiHeaders.exception , ApiExceptions.NoException().msg)
+            }
+
+
+
 
         }
 
