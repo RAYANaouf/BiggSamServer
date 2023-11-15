@@ -80,7 +80,7 @@ fun Application.configureRouting(database  : Database) {
                 set(it.store_password , store.store_password)
                 set(it.store_email    , store.store_email)
                 set(it.store_wilaya   , store.store_wilaya)
-                set(it.store_photo    , "")
+                set(it.store_photo    , store.store_photo)
             }
 
             if (result > 0){
@@ -109,19 +109,6 @@ fun Application.configureRouting(database  : Database) {
 
         }
 
-
-        post("/getUsers"){
-            user = call.receive<Alpha1User>()
-
-            println(user)
-
-
-            call.respondText("hello  ${user?.first_name} ${user?.last_name}")
-        }
-
-        get("/getUser"){
-            call.respondText("hello  ${user?.first_name} ${user?.last_name}")
-        }
 
         get("/${ApiRoutes.getStores}"){
 
