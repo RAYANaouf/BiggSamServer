@@ -103,17 +103,17 @@ fun Application.configureRouting(database  : Database) {
             val email = call.request.headers[ApiHeaders.email]
             val password = call.request.headers[ApiHeaders.password]
 
-            val clients = database
+            val clients = arrayListOf<AlphaClient>()
+
+            val clientsQuery = database
                 .from(AlphaStoreEntity)
                 .select()
                 .where { (AlphaStoreEntity.store_email like (email ?: "") ) and (AlphaStoreEntity.store_password  like  (password ?: "") )  }
 
 
-            for (client in clients){
+            for (client in clientsQuery){
 
-                call.response.headers.append(ApiHeaders.exception , ApiExceptions.NoException().msg)
-
-                call.respond(
+                clients.add(
                     AlphaClient(
                         client_id       = client[AlphaClientEntity.client_id    ]?.toLong() ?: 0,
                         client_fname    = client[AlphaClientEntity.client_fname ] ?: "",
@@ -126,10 +126,13 @@ fun Application.configureRouting(database  : Database) {
                         client_password = client[AlphaClientEntity.client_password] ?: ""
                     )
                 )
-
             }
 
-            if (clients.rowSet.size()>0){
+            if (!clients.isEmpty()){
+                call.response.headers.append(ApiHeaders.exception , ApiExceptions.NoException().msg)
+                call.respond(clients[0])
+            }
+            else{
                 call.response.headers.append(ApiHeaders.exception , ApiExceptions.WrongEmailOrPasswordException().msg)
                 call.respond("error")
             }
