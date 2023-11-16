@@ -6,7 +6,6 @@ import com.example.model.data.dataClasses.SetUpRequest
 import com.example.model.data.sealedClasses.ApiExceptions
 import com.example.model.entities.AlphaClientEntity
 import com.example.model.entities.AlphaStoreEntity
-import com.example.model.entities.UserEntity
 import com.example.model.network.ApiHeaders
 import com.example.model.network.ApiRoutes
 import io.ktor.server.application.*
@@ -68,7 +67,6 @@ fun Application.configureRouting(database  : Database) {
             }
 
 
-
         }
 
         post(ApiRoutes.storeSignUp){
@@ -100,7 +98,7 @@ fun Application.configureRouting(database  : Database) {
         /***************   client    *****************/
 
         get(ApiRoutes.clientSignIn){
-            val email = call.request.headers[ApiHeaders.email]
+            val email    = call.request.headers[ApiHeaders.email]
             val password = call.request.headers[ApiHeaders.password]
 
             val clients = arrayListOf<AlphaClient>()
@@ -108,7 +106,7 @@ fun Application.configureRouting(database  : Database) {
             val clientsQuery = database
                 .from(AlphaClientEntity)
                 .select()
-                .where { (AlphaClientEntity.client_email like (email ?: "") ) and (AlphaClientEntity.client_password  like  (password ?: "") )  }
+
 
 
             for (client in clientsQuery){
@@ -126,6 +124,7 @@ fun Application.configureRouting(database  : Database) {
                         client_password = client[AlphaClientEntity.client_password] ?: ""
                     )
                 )
+
             }
 
             if (clients.isNotEmpty()){
@@ -137,19 +136,7 @@ fun Application.configureRouting(database  : Database) {
                 call.respond("error")
             }
 
-        }
-
-
-        post("/setUpAccount") {
-
-            var setUpAccount = call.receive<SetUpRequest>()
-
-            database.update(UserEntity){
-                set(it.img_uri , setUpAccount.user_photo)
-                set(it.account_type , setUpAccount.accountType)
-
-                where { it.user_email like setUpAccount.user_email }
-            }
+            println("email : $email \n password : $password")
 
         }
 

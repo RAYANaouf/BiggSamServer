@@ -6,7 +6,7 @@ import org.ktorm.schema.varchar
 
 object AlphaClientEntity : Table<Nothing>("alphaclient") {
 
-    val client_id       = int("client_age").primaryKey()
+    val client_id       = int("client_id").primaryKey()
     val client_fname    = varchar("client_fname")
     val client_lname    = varchar("client_lname")
     val client_age      = int("client_age")
