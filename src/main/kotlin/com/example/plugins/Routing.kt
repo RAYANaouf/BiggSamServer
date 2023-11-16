@@ -140,6 +140,35 @@ fun Application.configureRouting(database  : Database) {
 
         }
 
+        post(ApiRoutes.clientSignUp){
+
+            val client = call.receive<AlphaClient>()
+
+            var result = database.insert(AlphaClientEntity){
+                set(it.client_fname     , client.client_fname)
+                set(it.client_lname     , client.client_lname )
+                set(it.client_age       , client.client_age)
+                set(it.client_sex       , client.client_sex)
+                set(it.client_number    , client.client_number)
+                set(it.client_photo     , client.client_photo)
+                set(it.client_email     , client.client_email)
+                set(it.client_password  , client.client_password)
+            }
+
+            if (result > 0){
+                call.response.headers.append(ApiHeaders.exception , ApiExceptions.NoException().msg)
+                call.response.headers.append(ApiHeaders.createdId , result.toString())
+            }
+            else{
+                call.response.headers.append(ApiHeaders.exception , ApiExceptions.NoException().msg)
+            }
+
+
+
+
+        }
+
+
 
         get(ApiRoutes.getStores){
 
