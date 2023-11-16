@@ -106,9 +106,9 @@ fun Application.configureRouting(database  : Database) {
             val clients = arrayListOf<AlphaClient>()
 
             val clientsQuery = database
-                .from(AlphaStoreEntity)
+                .from(AlphaClientEntity)
                 .select()
-                .where { (AlphaStoreEntity.store_email like (email ?: "") ) and (AlphaStoreEntity.store_password  like  (password ?: "") )  }
+                .where { (AlphaClientEntity.client_email like (email ?: "") ) and (AlphaClientEntity.client_password  like  (password ?: "") )  }
 
 
             for (client in clientsQuery){
@@ -128,7 +128,7 @@ fun Application.configureRouting(database  : Database) {
                 )
             }
 
-            if (!clients.isEmpty()){
+            if (clients.isNotEmpty()){
                 call.response.headers.append(ApiHeaders.exception , ApiExceptions.NoException().msg)
                 call.respond(clients[0])
             }
