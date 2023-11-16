@@ -1,10 +1,10 @@
 package com.example.plugins
 
-import com.example.model.data.dataClasses.Alpha1User
+import com.example.model.data.dataClasses.AlphaClient
 import com.example.model.data.dataClasses.AlphaStore
 import com.example.model.data.dataClasses.SetUpRequest
-import com.example.model.data.dataClasses.SignUpRequest
 import com.example.model.data.sealedClasses.ApiExceptions
+import com.example.model.entities.AlphaClientEntity
 import com.example.model.entities.AlphaStoreEntity
 import com.example.model.entities.UserEntity
 import com.example.model.network.ApiHeaders
@@ -21,7 +21,6 @@ fun Application.configureRouting(database  : Database) {
 
     routing {
 
-        var user : Alpha1User? = null
 
         //postgres://RAYANaouf:whqo65NdXMze@ep-red-cherry-13821704.us-west-2.aws.neon.tech/neondb
 
@@ -29,7 +28,9 @@ fun Application.configureRouting(database  : Database) {
             call.respondText("hello BiggSam v0.25")
         }
 
-        get(ApiRoutes.signIn){
+        /****************   store    *****************/
+
+        get(ApiRoutes.storeSignIn){
             var email = call.request.headers[ApiHeaders.email]
             var password = call.request.headers[ApiHeaders.password]
 
@@ -70,7 +71,7 @@ fun Application.configureRouting(database  : Database) {
 
         }
 
-        post(ApiRoutes.signUp){
+        post(ApiRoutes.storeSignUp){
 
             val store = call.receive<AlphaStore>()
 
@@ -96,6 +97,46 @@ fun Application.configureRouting(database  : Database) {
 
         }
 
+        /***************   client    *****************/
+
+        get(ApiRoutes.clientSignIn){
+            val email = call.request.headers[ApiHeaders.email]
+            val password = call.request.headers[ApiHeaders.password]
+
+            val clients = database
+                .from(AlphaStoreEntity)
+                .select()
+                .where { (AlphaStoreEntity.store_email like (email ?: "") ) and (AlphaStoreEntity.store_password  like  (password ?: "") )  }
+
+
+            for (client in clients){
+
+                call.response.headers.append(ApiHeaders.exception , ApiExceptions.NoException().msg)
+
+                call.respond(
+                    AlphaClient(
+                        client_id       = client[AlphaClientEntity.client_id    ]?.toLong() ?: 0,
+                        client_fname    = client[AlphaClientEntity.client_fname ] ?: "",
+                        client_lname    = client[AlphaClientEntity.client_lname ] ?: "",
+                        client_age      = client[AlphaClientEntity.client_age   ] ?: 0,
+                        client_number   = client[AlphaClientEntity.client_number] ?: 0,
+                        client_sex      = client[AlphaClientEntity.client_sex   ] ?: "",
+                        client_photo    = client[AlphaClientEntity.client_photo ] ?: "",
+                        client_email    = client[AlphaClientEntity.client_email ] ?: "",
+                        client_password = client[AlphaClientEntity.client_password] ?: ""
+                    )
+                )
+
+            }
+
+            if (clients.rowSet.size()>0){
+                call.response.headers.append(ApiHeaders.exception , ApiExceptions.WrongEmailOrPasswordException().msg)
+                call.respond("error")
+            }
+
+        }
+
+
         post("/setUpAccount") {
 
             var setUpAccount = call.receive<SetUpRequest>()
@@ -110,7 +151,7 @@ fun Application.configureRouting(database  : Database) {
         }
 
 
-        get("/${ApiRoutes.getStores}"){
+        get(ApiRoutes.getStores){
 
             val response = database
                 .from(AlphaStoreEntity)
